@@ -1,0 +1,215 @@
+import React, { useState } from 'react';
+import Box from '@mui/material/Box';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import MenuIcon from '@mui/icons-material/Menu';
+import TextField from '@mui/material/TextField';
+import { styled } from '@mui/material/styles';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+import { useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+
+export default function Mui() {
+  const [data,setData]=useState([])
+  const [selectedRow, setSelectedRow] = useState("");
+  const [isDeleteConfirmationOpen, setDeleteConfirmationOpen] = useState(false);
+  const [rowToDelete, setRowToDelete] = useState("");
+  const [isViewDialogOpen, setViewDialogOpen] = useState(false);
+  const [selectedViewRow, setSelectedViewRow] = useState("");
+  const [isEditMode, setIsEditMode] = useState(false); // Add this state for edit mode
+
+
+  useEffect(() => {
+    const datas = JSON.parse(localStorage.getItem("orders"));
+    setData(datas)
+  }, []);
+// 123
+
+  // const handleFormSubmit = () => {
+  //   if (isEditMode) {
+  //     If in edit mode, update the selected row
+  //     if (selectedRow !== null) {
+  //       const updatedRow = {
+  //         ...tableRows[selectedRow],
+  //         Name: formData.fullName,
+  //         USN: formData.usn,
+  //         Email: formData.email,
+  //         Phone: formData.phoneNumber,
+  //         Address: formData.address,
+  //       };
+
+  //       setTableRows((prevRows) => {
+  //         const newRows = [...prevRows];
+  //         newRows[selectedRow] = updatedRow;
+  //         return newRows;
+  //       });
+
+  //       setSelectedRow(null); // Exit edit mode
+  //     }
+  //   } else {
+  //     // If not in edit mode, add a new row
+  //     const newRow = {
+  //       Name: formData.fullName,
+  //       USN: formData.usn,
+  //       Email: formData.email,
+  //       Phone: formData.phoneNumber,
+  //       Address: formData.address,
+  //     };
+
+  //     setTableRows([...tableRows, newRow]);
+  //   }
+
+  //   // Reset the form
+  //   setFormData(initialFormData);
+  //   setIsEditMode(false); // Reset edit mode
+  // };
+
+  const handleView = (rowData) => {
+    setSelectedViewRow(rowData);
+    setViewDialogOpen(true);
+  };
+
+  const handleCloseViewDialog = () => {
+    setViewDialogOpen(false);
+    setSelectedViewRow("");
+  };
+
+  // const handleEdit = (index) => {
+  //   // Set the form fields to the selected row's values
+  //   setFormData(tableRows[index]);
+  //   setSelectedRow(index);
+  //   setIsEditMode(true); // Enter edit mode
+  // };
+
+  // const handleDelete = (index) => {
+  //   // Open the delete confirmation dialog and store the row to delete
+  //   setDeleteConfirmationOpen(true);
+  //   setRowToDelete(index);
+  // };
+
+  // const handleDeleteConfirmed = () => {
+  //   // Close the delete confirmation dialog and remove the row
+  //   setDeleteConfirmationOpen(false);
+  //   if (rowToDelete !== null) {
+  //     setTableRows((prevRows) => {
+  //       const newRows = [...prevRows];
+  //       newRows.splice(rowToDelete, 1);
+  //       return newRows;
+  //     });
+  //   }
+  //   setRowToDelete(null);
+  // };
+
+  // const handleDeleteCancelled = () => {
+  //   // Close the delete confirmation dialog without deleting the row
+  //   setDeleteConfirmationOpen(false);
+  //   setRowToDelete(null);
+  // };
+
+  return (
+    <div>
+      {/* <Box>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              News
+            </Typography>
+            <Button color="inherit">Login</Button>
+          </Toolbar>
+        </AppBar>
+      </Box> */}
+
+      
+
+      <TableContainer component={Paper} sx={{ margin: '30px 0' }}>
+        <Table sx={{ minWidth: 700 }} aria-label="customized table">
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ backgroundColor: 'black', color: 'white' }}>DISH</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'black', color: 'white' }}>Quantity</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'black', color: 'white' }}>Amount</TableCell>
+
+              <TableCell align="right" style={{ backgroundColor: 'black', color: 'white' }}> Total Price</TableCell>
+              <TableCell align="right" style={{ backgroundColor: 'black', color: 'white' }}>Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((row, index) => (
+              <TableRow key={index}>
+                <TableCell component="th" scope="row">
+                  <div style={{display:'flex'}}>
+                    <div>
+                        <img src={row.imageLink} style={{width:"100px"}}/>
+                    </div>
+                    <div>
+                    <h1 style={{margin:' 10%'}}>{row.name}</h1>
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell align="right">{row.quantity}</TableCell>
+                <TableCell align="right">{row.totalPrice}</TableCell>
+
+                <TableCell align="right">{row.totalBill}</TableCell>
+                <TableCell align="right">
+                  
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    style={{ marginRight: '8px' }}
+                    // onClick={() => handleEdit(index)}
+                  >
+                    Edit
+                  </Button>
+                  <Button
+                    variant="outlined"
+                    color="error"
+                    // onClick={() => handleDelete(index)}
+                  >
+                    Cancel
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
+      {/* <Dialog
+        open={isDeleteConfirmationOpen}
+        onClose={handleDeleteCancelled}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">{"Confirm Delete"}</DialogTitle>
+        <DialogContent>
+          <DialogContent>
+            Are you sure you want to delete this row?
+          </DialogContent>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDeleteCancelled} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDeleteConfirmed} color="primary" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog> */}
+
+      {/* <ViewPopup open={isViewDialogOpen} rowData={selectedViewRow} onClose={handleCloseViewDialog} /> */}
+    </div>
+  );
+}
+
